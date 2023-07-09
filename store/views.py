@@ -83,7 +83,7 @@ class SignUP(View):
         
         if len(first_name) < 4:
             error_message = 'First name is too short!'
-        elif len(password) < 8:
+        elif len(password) < 4:
             error_message = 'Password must contain 8 characters!'
         elif len(phone) < 8:
             error_message = 'Phone no. is incorrect!'

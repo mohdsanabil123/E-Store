@@ -9,6 +9,6 @@ urlpatterns = [
     path('login/', views.Login.as_view(), name='login'),
     path('logout/', views.logout, name='logout'),
     path('cart/', views.Cart.as_view(), name='cart'),
-    path('checkout', views.Checkout.as_view(), name='checkout'),
+    path('checkout', auth_middleware(views.Checkout.as_view()), name='checkout'),
     path('order', auth_middleware(views.OrderView.as_view()), name='order'),
 ]

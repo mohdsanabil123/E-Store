@@ -15,6 +15,10 @@ class Order(models.Model):
     
     def placeOrder(self):
         self.save()
+    
+    
+    def __str__(self):
+        return f"{self.product} ordered by {self.customer} on {self.date}    Status: {self.status}"
         
         
     @staticmethod
