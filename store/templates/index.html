@@ -7,7 +7,7 @@
 
 <form class="form-inline my-2 my-lg-0 mr-lg-3">
   <input class="form-control mr-sm-2" type="search" placeholder="Search Product" aria-label="Search">
-  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  <button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
 </form>
 
 {% endblock search_bar %}
@@ -20,7 +20,7 @@
 
     <!-- filter products by category-->
 
-    <div class="col-lg-3">
+    <div class="col-lg-3 mb-5">
       <div class="list-group">
         <a href="/" class="list-group-item list-group-item-action">All Products</a>
         {% for category in categories %}
