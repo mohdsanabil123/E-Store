@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
+{% block title %} Store {% endblock title %}
 
 {% block search_bar %}
 
 {% load cart %}
 
 <form class="form-inline my-2 my-lg-0 mr-lg-3">
-  <input class="form-control mr-sm-2" type="search" placeholder="Search Product" aria-label="Search">
+  <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search Product" aria-label="Search">
   <button class="btn btn-info my-2 my-sm-0" type="submit">Search</button>
 </form>
 
@@ -42,24 +43,8 @@
             </div>
 
             <div class="card-footer p-0">
-
               {% if product|is_in_cart:request.session.cart %}
-
-              <div class="row no-gutters">
-                <form action="/#{{product.id}}" method="post" class="col-2">
-                  {% csrf_token %}
-                  <input type="hidden" name="product" value="{{product.id}}">
-                  <input type="hidden" name="remove" value="True">
-                  <input type="submit" value="-" class="btn btn-block">
-                </form>
-                <div class="text-center col">{{product|cart_quantity:request.session.cart}} in Cart</div>
-                <form action="/#{{product.id}}" method="post" class="col-2">
-                  {% csrf_token %}
-                  <input type="hidden" name="product" value="{{product.id}}">
-                  <input type="submit" value="+" class="btn btn-block">
-                </form>
-              </div>
-              
+              <a class="btn btn-light border btn-block text-primary form-control" href="{% url 'cart' %}">Go To Cart</a>
               {% else %}
               <form action="/#{{product.id}}" method="post" class="btn-block">
                 {% csrf_token %}
@@ -68,9 +53,7 @@
               </form>
               {% endif %}
             </div>
-            
         </div>
-        
         {% endfor %}
     </div>
     </div>

@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %} Your Cart {% endblock title %}
+
 {% block content %}
 {% load cart %}
 <div class="container">
@@ -23,7 +25,22 @@
                     <td><img style="height: 55px;" src="{{product.image.url}}" class="rounded" alt=""></td>
                     <td>{{product.name}}</td>
                     <td>₹ {{product.price}}</td>
-                    <td>{{product|cart_quantity:request.session.cart}}</td>
+                    <td>
+                      <div class="row">
+                        <form action="" method="post" class="">
+                          {% csrf_token %}
+                          <input hidden type="text" name="product" value="{{product.id}}">
+                          <input hidden type="text" name="remove" value="True">
+                          <input type="submit" value="-" class="btn btn-sm mr-1">
+                        </form>
+                        {{product|cart_quantity:request.session.cart}}
+                        <form action="" method="post" class="">
+                          {% csrf_token %}
+                          <input type="hidden" name="product" value="{{product.id}}">
+                          <input type="submit" value="+" class="btn btn-sm ml-1">
+                        </form>
+                      </div>
+                    </td>
                     <td>₹ {{product|price_total:request.session.cart}}</td>
                 </tr>
                 {% endfor %}

@@ -18,18 +18,9 @@ class Index(View):
         # print(product)
         
         cart = request.session.get('cart')
+        # print(cart)
         if cart:
-            quantity = cart.get(product)
-            if quantity:
-                if remove:
-                    if quantity == 1:
-                        cart.pop(product)
-                    else:
-                        cart[product] = quantity - 1
-                else:
-                    cart[product] = quantity + 1
-            else:
-                cart[product] = 1
+            cart[product] = 1
         else:
             cart = {}
             cart[product] = 1
@@ -41,6 +32,14 @@ class Index(View):
         
     
     def get(self, request):
+        search = request.GET.get('search')
+        if search:
+            products = Product.objects.filter(name__icontains=search) 
+            return render( request, 'index.html', {'products':products} )
+        
+        cart = request.session.get('cart')
+        if not cart:
+            request.session['cart'] = {}
         products = None
         categories = Category.get_all_categories()
         categoryID = request.GET.get('category')
@@ -135,6 +134,31 @@ class Cart(View):
         products = Product.get_products_by_id(ids)
         # print(products)
         return render(request, 'cart.html', {'products':products})
+    
+    def post(self, request):
+        product = request.POST.get('product')
+        remove = request.POST.get('remove')
+        cart = request.session.get('cart')
+        # print(cart)
+        if cart:
+            quantity = cart.get(product)
+            if quantity:
+                if remove:
+                    if quantity == 1:
+                        cart.pop(product)
+                    else:
+                        cart[product] = quantity - 1
+                else:
+                    cart[product] = quantity + 1
+            else:
+                cart[product] = 1
+        else:
+            cart = {}
+            cart[product] = 1
+        
+        request.session['cart'] = cart
+        # print(cart)
+        return redirect('cart')
 
 
 class Checkout(View):
@@ -170,97 +194,3 @@ class OrderView(View):
         # print(orders)
         
         return render(request, 'orders.html', {'orders': orders})
-
-
-
-
-
-
-
-
-
-
-
-"""
-# Function based view for login
-
-def login(request):
-    if request.method == 'GET':
-        return render(request, 'login.html')
-    else:
-        email = request.POST['email']
-        password = request.POST['password']
-        customer = Customer.get_customer_by_email(email)
-        error_message = None
-        # print(customer)
-        if customer:
-            if password == customer.password:
-                return redirect('/')
-            else:
-                error_message = 'Email or Password Invalid !'
-        error_message = 'Email or Password Invalid !'
-    
-        return render(request, 'login.html', {'error': error_message} )
-        
-# Function based view for signup 
-
-def signup(request):
-    if request.method == 'GET':
-        return render(request, 'signup.html')
-    else:
-        first_name = request.POST['firstname']
-        last_name = request.POST['lastname']
-        phone = request.POST['phone']
-        email = request.POST['email']
-        password = request.POST['password']
-        
-        # Validation
-        value = {
-            'first_name': first_name,
-            'last_name': last_name,
-            'phone': phone,
-            'email': email,
-        }
-        error_message = None
-        
-        customer = Customer(first_name=first_name, last_name=last_name, phone=phone, email=email, password=password)
-        customer.save()
-        
-        if len(first_name) < 4:
-            error_message = 'First name is too short!'
-        elif len(password) < 8:
-            error_message = 'Password must contain 8 characters!'
-        elif len(phone) < 8:
-            error_message = 'Phone no. is incorrect!'
-        elif Customer.isExist:
-            error_message = 'Email is already taken!'
-        
-        if not error_message:
-            return redirect('/')
-        else:
-            data = {
-                'values': value,
-                'error':error_message,
-            }
-            return render(request, 'signup.html', data)
-            
-            
-def index( request ):
-    products = None
-    categories = Category.get_all_categories()
-    categoryID = request.GET.get('category')
-    
-    if categoryID:
-        products = Product.get_all_products_by_category_id(categoryID)
-    else:
-        products = Product.get_all_products()
-    data = {
-        'products':products,
-        'categories':categories,
-    }
-    
-    print('Your email from seesion:', request.session.get('customer_email'))
-    
-    return render( request, 'index.html', data )
-
-        """
